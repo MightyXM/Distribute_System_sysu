@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+service storageServer {
+    // 上传文件到服务器并同步
+    rpc synUpload(stream upload_file) returns (reply) {}
+    // 上传文件到服务器
+    rpc upload(stream upload_file) returns (reply) {}
+    // 从服务器下载文件
+    rpc download(file_path) returns (stream fileStream) {}
+    // 查询目录
+    rpc ls(file_path) returns (fileList) {}
+    // 查询所有目录
+    rpc lsall(file_path) returns (fileList) {}
+    // 创建文件夹
+    rpc mkdir(file_path) returns (reply) {}
+    // 删除文件并同步
+    rpc synDelete(file_path) returns (reply) {}
+    // 删除文件
+    rpc delete(file_path) returns (reply) {}
+}
+
+/*******************************/
+/*         PARAMETER           */
+/*******************************/
+message upload_file { // 文件地址和文件数据流
+    string path = 1;
+    bytes buffer = 2;
+}
+
+message file_path { // 文件地址
+    string path = 1;
+}
+
+/*******************************/
+/*         RETURN_VALUE        */
+/*******************************/
+message reply { // rpc返回值告知操作成功与否
+    bool done = 1;
+}
+
+message fileStream { // rpc返回文件数据流
+    bytes buffer = 1;
+}
+
+message fileList { // rpc返回文件目录表
+    string list = 1;
+}
